@@ -295,32 +295,4 @@ sns.heatmap(df.corr(), annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
 st.pyplot(fig)
 
 
-#'''
-#step 1 sort
-#st.subheader("Sorting in tables")
-#st.text("The top five of minimun of nights")
-#st.write(df.query("minimum_nights>=0").sort_values("minimum_nights", ascending=False).head())
 
-#step 3 - column filter
-#st.subheader("Select a column to see")
-#default_cols = ["name", "host_id", "price"]
-#cols = st.multiselect("Columns", df.columns.tolist(), default=default_cols)
-#st.dataframe(df[cols].head(10))
-
-#step 4 -  Static grouping
-#st.subheader("Avg minimum for a room type")
-#st.table(df.groupby("room_type").minimum_nights.mean().reset_index().sort_values("minimum_nights", ascending=False))
-
-
-
-#step 6 -   Radio buttons
-#neighbourhood = st.radio("Neighbourhood", df.neighbourhood_group.unique())
-
-#@st.cache
-#def get_availability(neighbourhood):
- #   return df.query("""neighbourhood_group==@neighbourhood\
-  #      and availability_365>0""").availability_365.describe(\
-   #         percentiles=[.1, .25, .5, .75, .9, .99]).to_frame().T
-
-#st.table(get_availability(neighbourhood))
-#'''
