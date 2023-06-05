@@ -255,38 +255,6 @@ if len(outliers) > 0:
 else:
     st.write("No se encontraron valores atípicos en la columna 'clave_mun'.")
 
-'''
-# Definir los rangos de hora
-rango_inicio = 8
-rango_fin = 17
-
-# Crear el diccionario de mapeo para los rangos de hora
-rangos_hora = {}
-for hora in range(rango_inicio, rango_fin+1):
-    rango_texto = f"{hora:02d}:00 a {hora:02d}:59"
-    rangos_hora[rango_texto] = hora
-
-# Crear una nueva columna 'rango_hora_numerico' con los valores convertidos
-df['rango_hora_numerico'] = df['rango_hora'].map(rangos_hora)
-
-IQR = df.rango_hora_numerico.quantile(0.75) - df.rango_hora_numerico.quantile(0.25)
-lower = df.rango_hora_numerico.quantile(0.25) - 1.5 * IQR
-upper = df.rango_hora_numerico.quantile(0.75) + 1.5 * IQR
-
-outliers = []
-
-for x in df.rango_hora_numerico:
-    if x < lower or x > upper:
-        outliers.append(x)
-
-
-if len(outliers) > 0:
-    st.write("Valores atípicos (outliers) en la columna 'rango_hora_numerico':")
-    st.table(outliers)
-else:
-    st.write("No se encontraron valores atípicos en la columna 'rango_hora_numerico'.")
-
-'''
 
 st.subheader("Análisis de Correlaciones")
 
