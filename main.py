@@ -255,7 +255,7 @@ if len(outliers) > 0:
 else:
     st.write("No se encontraron valores atípicos en la columna 'clave_mun'.")
 
-
+'''
 # Definir los rangos de hora
 rango_inicio = 8
 rango_fin = 17
@@ -286,7 +286,7 @@ if len(outliers) > 0:
 else:
     st.write("No se encontraron valores atípicos en la columna 'rango_hora_numerico'.")
 
-
+'''
 
 st.subheader("Análisis de Correlaciones")
 
