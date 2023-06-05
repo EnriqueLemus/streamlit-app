@@ -142,7 +142,7 @@ col10.plotly_chart(fig2)
 #Histograma
 values2 = st.sidebar.slider("Meses del año", int(df.num_mes.min()), int(df.num_mes.max()), (int(df.num_mes.min()), int(df.num_mes.max())), step=1)
 filtered_df2 = df[(df['num_mes'] >= values2[0]) & (df['num_mes'] <= values2[1])]
-hist2 = px.histogram(filtered_df2, x="num_mes", nbins=7)
+hist2 = px.histogram(filtered_df2, x="num_mes", nbins=12)
 hist2.update_traces(marker_line_width=2, marker_line_color='black')
 hist2.update_xaxes(title="Meses")
 hist2.update_yaxes(title="Número de Accidentes")
@@ -177,7 +177,7 @@ col13.plotly_chart(fig4)
 #Histograma
 values3 = st.sidebar.slider("Días del mes", int(df.dia.min()), int(df.dia.max()), (int(df.dia.min()), int(df.dia.max())), step=1)
 filtered_df3 = df[(df['dia'] >= values3[0]) & (df['dia'] <= values3[1])]
-hist3 = px.histogram(filtered_df2, x="dia", nbins=7)
+hist3 = px.histogram(filtered_df2, x="dia", nbins=31)
 hist3.update_traces(marker_line_width=2, marker_line_color='black')
 hist3.update_xaxes(title="Dias")
 hist3.update_yaxes(title="Número de Accidentes")
