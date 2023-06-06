@@ -5,6 +5,7 @@ import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+from sklearn.preprocessing import LabelEncoder
 
 
 st.title("Reto Ivan Preeliminar")
@@ -366,11 +367,14 @@ else:
 st.subheader("Análisis de Correlaciones")
 
 
-df = df.fillna(df.mean())
+df2 = df.apply(LabelEncoder().fit_transform)
+
+df_filled = df2.fillna(df2.mean())
 
 fig, ax = plt.subplots(figsize=(10, 8))
-sns.heatmap(df.corr(), annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
+sns.heatmap(df_filled.corr(), annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
 st.pyplot(fig)
+
 
 
 #'''
