@@ -369,7 +369,7 @@ st.subheader("Análisis de Correlaciones")
 df = df.fillna(df.mean())
 
 fig, ax = plt.subplots(figsize=(10, 8))
-sns.heatmap(df_filled.corr(), annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
 st.pyplot(fig)
 
 
