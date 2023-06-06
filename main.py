@@ -80,11 +80,11 @@ st.write("*Skewness* indica la tendencia u orientación de la distribución de l
 st.write("*Kurtosis* representa qué tan 'puntiaguda' es la distribución. Un valor alto de Kurtosis imdica una mayor concentración de valores en el promedio (punta) de la distribución. Un valor de 0 o muy cercano, supone una distribuión normal, un calor mayor a 0 es una distribución muy puntiaguda, mientras que un valor menor a 0 es una distribución muy plana/alargada")
 
 
-skewnessdf = df.skew()
+# skewnessdf = df.skew()
 kurtosisdf = df.kurt() 
 col20, col21, col22, col23 = st.columns(4)
 
-col21.write(skewnessdf.to_frame().rename(columns={0: "Skewness"}), unsafe_allow_html=True)
+# col21.write(skewnessdf.to_frame().rename(columns={0: "Skewness"}), unsafe_allow_html=True)
 col22.write(kurtosisdf.to_frame().rename(columns={0: "Kurtosis"}), unsafe_allow_html=True)
 
 
@@ -142,7 +142,7 @@ col10.plotly_chart(fig2)
 #Histograma
 values2 = st.sidebar.slider("Meses del año", int(df.num_mes.min()), int(df.num_mes.max()), (int(df.num_mes.min()), int(df.num_mes.max())), step=1)
 filtered_df2 = df[(df['num_mes'] >= values2[0]) & (df['num_mes'] <= values2[1])]
-hist2 = px.histogram(filtered_df2, x="num_mes", nbins=12)
+hist2 = px.histogram(filtered_df2, x="num_mes", nbins=7)
 hist2.update_traces(marker_line_width=2, marker_line_color='black')
 hist2.update_xaxes(title="Meses")
 hist2.update_yaxes(title="Número de Accidentes")
@@ -177,7 +177,7 @@ col13.plotly_chart(fig4)
 #Histograma
 values3 = st.sidebar.slider("Días del mes", int(df.dia.min()), int(df.dia.max()), (int(df.dia.min()), int(df.dia.max())), step=1)
 filtered_df3 = df[(df['dia'] >= values3[0]) & (df['dia'] <= values3[1])]
-hist3 = px.histogram(filtered_df3, x="dia", nbins=31)
+hist3 = px.histogram(filtered_df2, x="dia", nbins=7)
 hist3.update_traces(marker_line_width=2, marker_line_color='black')
 hist3.update_xaxes(title="Dias")
 hist3.update_yaxes(title="Número de Accidentes")
@@ -189,8 +189,37 @@ st.write("El valor de skewness para los días es: %.2f" % skewness_dia)
 st.write("El valor de kurtosis para los días es: %.2f" % kurtosis_dia)
 
 
+st.subheader("Días que más accidentes ocurren")
+
+# Definir un diccionario de mapeo para los días de la semana
+dias_semana = {
+    'lunes': 1,
+    'martes': 2,
+    'miércoles': 3,
+    'jueves': 4,
+    'viernes': 5,
+    'sábado': 6,
+    'domingo': 7
+}
+
+# Crear una nueva columna 'dia_sem_numerico' con los valores convertidos
+df['dia_sem_numerico'] = df['dia_sem'].map(dias_semana)
+
+# Contar la frecuencia de cada día de la semana
+frecuencia_dias = df['dia_sem_numerico'].value_counts()
+
+# Obtener el día de la semana más repetido
+dia_mas_repetido = frecuencia_dias.idxmax()
+
+# Configuración de la aplicación Streamlit
+st.title("Análisis de días de la semana")
+st.write("El día de la semana más repetido es:", dia_mas_repetido)
+
+
+
 #Visualización del Mapa de accidentes
 st.header("Mapa de accidentes")
+
 df = df.rename(columns={'y': 'LAT', 'x': 'LON'})
 anios = df["anio"].unique()
 meses = df["num_mes"].unique()
@@ -206,6 +235,19 @@ if seleccion_anios:
 if seleccion_meses:
     filtered_df = filtered_df[filtered_df["num_mes"].isin(seleccion_meses)]
 st.map(filtered_df[["LAT", "LON"]].dropna(how="any"))
+
+
+# Crear una nueva columna 'dia_sem_numerico' con los valores convertidos
+df['dia_sem_numerico'] = df['dia_sem'].map(dias_semana)
+
+# Contar la frecuencia de cada día de la semana
+frecuencia_dias = df['dia_sem_numerico'].value_counts()
+
+# Obtener el día de la semana más repetido
+dia_mas_repetido = frecuencia_dias.idxmax()
+
+# Mostrar el resultado en Streamlit
+st.write("El día de la semana más repetido es:", dia_mas_repetido)
 
 
 st.subheader("Análisis de Outliers")
@@ -256,6 +298,71 @@ else:
     st.write("No se encontraron valores atípicos en la columna 'clave_mun'.")
 
 
+# Definir los rangos de hora
+rango_inicio = 8
+rango_fin = 17
+
+# Crear el diccionario de mapeo para los rangos de hora
+rangos_hora = {}
+for hora in range(rango_inicio, rango_fin+1):
+    rango_texto = f"{hora:02d}:00 a {hora:02d}:59"
+    rangos_hora[rango_texto] = hora
+
+# Crear una nueva columna 'rango_hora_numerico' con los valores convertidos
+df['rango_hora_numerico'] = df['rango_hora'].map(rangos_hora)
+
+IQR = df.rango_hora_numerico.quantile(0.75) - df.rango_hora_numerico.quantile(0.25)
+lower = df.rango_hora_numerico.quantile(0.25) - 1.5 * IQR
+upper = df.rango_hora_numerico.quantile(0.75) + 1.5 * IQR
+
+outliers = []
+
+for x in df.rango_hora_numerico:
+    if x < lower or x > upper:
+        outliers.append(x)
+
+
+if len(outliers) > 0:
+    st.write("Valores atípicos (outliers) en la columna 'rango_hora_numerico':")
+    st.table(outliers)
+else:
+    st.write("No se encontraron valores atípicos en la columna 'rango_hora_numerico'.")
+
+
+# Definir un diccionario de mapeo para los días de la semana
+dias_semana = {
+    'lunes': 1,
+    'martes': 2,
+    'miércoles': 3,
+    'jueves': 4,
+    'viernes': 5,
+    'sábado': 6,
+    'domingo': 7
+}
+
+# Crear una nueva columna 'dia_sem_numerico' con los valores convertidos
+df['dia_sem_numerico'] = df['dia_sem'].map(dias_semana)
+
+IQR = df.dia_sem_numerico.quantile(0.75) - df.dia_sem_numerico.quantile(0.25)
+lower = df.dia_sem_numerico.quantile(0.25) - 1.5 * IQR
+upper = df.dia_sem_numerico.quantile(0.75) + 1.5 * IQR
+
+outliers = []
+
+for x in df.dia_sem_numerico:
+    if x < lower or x > upper:
+        outliers.append(x)
+
+
+if len(outliers) > 0: 
+    st.write("Valores atípicos (outliers) en la columna 'dia_sem_numerico':")
+    st.table(outliers)
+    
+else:
+    st.write("No se encontraron valores atípicos en la columna 'dia_sem_numerico'.")
+
+
+
 st.subheader("Análisis de Correlaciones")
 
 fig, ax = plt.subplots(figsize=(10, 8))
@@ -263,4 +370,32 @@ sns.heatmap(df.corr(), annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
 st.pyplot(fig)
 
 
+#'''
+#step 1 sort
+#st.subheader("Sorting in tables")
+#st.text("The top five of minimun of nights")
+#st.write(df.query("minimum_nights>=0").sort_values("minimum_nights", ascending=False).head())
 
+#step 3 - column filter
+#st.subheader("Select a column to see")
+#default_cols = ["name", "host_id", "price"]
+#cols = st.multiselect("Columns", df.columns.tolist(), default=default_cols)
+#st.dataframe(df[cols].head(10))
+
+#step 4 -  Static grouping
+#st.subheader("Avg minimum for a room type")
+#st.table(df.groupby("room_type").minimum_nights.mean().reset_index().sort_values("minimum_nights", ascending=False))
+
+
+
+#step 6 -   Radio buttons
+#neighbourhood = st.radio("Neighbourhood", df.neighbourhood_group.unique())
+
+#@st.cache
+#def get_availability(neighbourhood):
+ #   return df.query("""neighbourhood_group==@neighbourhood\
+  #      and availability_365>0""").availability_365.describe(\
+   #         percentiles=[.1, .25, .5, .75, .9, .99]).to_frame().T
+
+#st.table(get_availability(neighbourhood))
+#'''
