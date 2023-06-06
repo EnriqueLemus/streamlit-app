@@ -81,11 +81,11 @@ st.write("*Kurtosis* representa qué tan 'puntiaguda' es la distribución. Un va
 
 
 # skewnessdf = df.skew()
-kurtosisdf = df.kurt() 
+# kurtosisdf = df.kurt() 
 col20, col21, col22, col23 = st.columns(4)
 
 # col21.write(skewnessdf.to_frame().rename(columns={0: "Skewness"}), unsafe_allow_html=True)
-col22.write(kurtosisdf.to_frame().rename(columns={0: "Kurtosis"}), unsafe_allow_html=True)
+# col22.write(kurtosisdf.to_frame().rename(columns={0: "Kurtosis"}), unsafe_allow_html=True)
 
 
 #Distribución de años
